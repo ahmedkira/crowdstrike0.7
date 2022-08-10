@@ -1,0 +1,41 @@
+{
+  "id": "Crowdstrike",
+  "lib": "custom",
+  "rules": [
+    {
+      "condition": "_raw.includes('\\\"ContextTimeStamp\\\"\\:')",
+      "type": "regex",
+      "timestampAnchorRegex": "/\"ContextTimeStamp\":\"/",
+      "timestamp": {
+        "type": "auto",
+        "length": 30
+      },
+      "timestampTimezone": "local",
+      "timestampEarliest": "-420weeks",
+      "timestampLatest": "+1week",
+      "maxEventBytes": 5120000,
+      "disabled": false,
+      "eventBreakerRegex": "/[\\r\\n]+(?=\\{\\\")/",
+      "jsonExtractAll": false,
+      "name": "ContextTimeStamp"
+    },
+    {
+      "condition": "!_raw.includes(\"ContextTimeStamp\") && _raw.includes(\"\\\"timestamp\\\"\")",
+      "type": "regex",
+      "timestampAnchorRegex": "/\"timestamp\":\"/",
+      "timestamp": {
+        "type": "auto",
+        "length": 30
+      },
+      "timestampTimezone": "local",
+      "timestampEarliest": "-420weeks",
+      "timestampLatest": "+1week",
+      "maxEventBytes": 5120000,
+      "disabled": false,
+      "eventBreakerRegex": "/[\\n\\r]+(?=\\{\\\")/",
+      "name": "timestamp_noContextTimeStamp"
+    }
+  ],
+  "description": "Crowdstrike Timestamp Processing",
+  "tags": "Crowdstrike,Security,fdr"
+}
